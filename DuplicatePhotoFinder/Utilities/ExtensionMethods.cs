@@ -7,7 +7,6 @@ namespace DuplicatePhotoFinder
     {
         public static bool IsValidPath(this String path)
         {
-            // TODO:  Implement a better regex for path matching.
             return Regex.IsMatch(path, @"^(?:[a-zA-Z]\:|\\\\[\w\.]+\\[\w.$]+)\\(?:[\w]+\\)*\w([\w.])+$");
         }
     }
