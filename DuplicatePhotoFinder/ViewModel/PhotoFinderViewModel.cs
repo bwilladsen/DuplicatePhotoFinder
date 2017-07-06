@@ -1,17 +1,32 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.ComponentModel;
-using System.IO;
-using System.Security;
 
 namespace DuplicatePhotoFinder
 {
-    public class PhotoFinder : BaseViewModel
+    public class PhotoFinderViewModel : BaseViewModel
     {
-        private String picturePath;
+        #region Commands
+
+        private static UICommand searchCommand = new UICommand(searchCanExecuteCommandHandler, searchExecuteCommandHandler);
+        public static UICommand SearchCommand
+        {
+            get { return searchCommand; }
+        }
+        
+        private static bool searchCanExecuteCommandHandler(object sender)
+        {
+           return false;
+        }
+
+        private static void searchExecuteCommandHandler(object sender)
+        {
+
+        }
+
+        #endregion
+
+        #region Properties
+
+        private String picturePath = String.Empty;
         public String PicturePath
         {
             get { return this.picturePath; }
@@ -24,6 +39,10 @@ namespace DuplicatePhotoFinder
                 }
             }
         }
+
+        #endregion
+
+        #region Validation
 
         protected override string ValidateProperty(string propertyName)
         {
@@ -40,5 +59,7 @@ namespace DuplicatePhotoFinder
 
             return error;
         }
+
+        #endregion
     }
 }

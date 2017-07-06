@@ -81,8 +81,9 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Utilities\ExtensionMethods.cs" />
-    <Compile Include="ViewModel\BaseViewModel.cs" />
-    <Compile Include="ViewModel\PhotoFinder.cs" />
+    <Compile Include="Utilities\UICommand.cs" />
+    <Compile Include="ViewModel\ViewModelBase.cs" />
+    <Compile Include="ViewModel\PhotoFinderViewModel.cs" />
     <Compile Include="View\MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>

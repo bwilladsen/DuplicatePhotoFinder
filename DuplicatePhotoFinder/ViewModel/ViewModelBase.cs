@@ -5,6 +5,8 @@ namespace DuplicatePhotoFinder
 {
     public abstract class BaseViewModel : INotifyPropertyChanged, IDataErrorInfo
     {
+        #region IDataErrorInfo
+
         public string this[string columnName]
         {
             get
@@ -26,6 +28,10 @@ namespace DuplicatePhotoFinder
             }
         }
 
+        #endregion
+
+        #region INotifyPropertyChanged
+
         public event PropertyChangedEventHandler PropertyChanged;
 
         protected void NotifyPropertyChanged(String info)
@@ -35,5 +41,8 @@ namespace DuplicatePhotoFinder
                 PropertyChanged(this, new PropertyChangedEventArgs(info));
             }
         }
+
+        #endregion
+
     }
 }
