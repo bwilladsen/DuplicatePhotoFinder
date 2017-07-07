@@ -6,20 +6,27 @@ namespace DuplicatePhotoFinder
     {
         #region Commands
 
-        private static UICommand searchCommand = new UICommand(searchCanExecuteCommandHandler, searchExecuteCommandHandler);
-        public static UICommand SearchCommand
+        private UICommand searchCommand;
+        public UICommand SearchCommand
         {
-            get { return searchCommand; }
-        }
-        
-        private static bool searchCanExecuteCommandHandler(object sender)
-        {
-           return false;
+            get
+            {
+                if (searchCommand == null)
+                {
+                    searchCommand = new UICommand(searchCanExecuteCommandHandler, searchExecuteCommandHandler);
+                }
+                return searchCommand;
+            }
         }
 
-        private static void searchExecuteCommandHandler(object sender)
+        private bool searchCanExecuteCommandHandler(object sender)
         {
+            return string.IsNullOrEmpty(Error) && !IsSearching;
+        }
 
+        private void searchExecuteCommandHandler(object sender)
+        {
+            IsSearching = true;
         }
 
         #endregion
@@ -40,6 +47,12 @@ namespace DuplicatePhotoFinder
             }
         }
 
+        public bool IsSearching
+        {
+            get;
+            set;
+        }
+
         #endregion
 
         #region Validation
@@ -58,6 +71,15 @@ namespace DuplicatePhotoFinder
             }
 
             return error;
+        }
+
+        #endregion
+
+        #region Searching
+
+        private void searchForDuplicatePictures()
+        {
+
         }
 
         #endregion

@@ -7,11 +7,13 @@ namespace DuplicatePhotoFinder
     {
         #region IDataErrorInfo
 
+        private String error = String.Empty;
         public string this[string columnName]
         {
             get
             {
-                return ValidateProperty(columnName);
+                error = ValidateProperty(columnName);
+                return error;
             }
         }
 
@@ -24,7 +26,7 @@ namespace DuplicatePhotoFinder
         {
             get
             {
-                return null;
+                return error;
             }
         }
 
