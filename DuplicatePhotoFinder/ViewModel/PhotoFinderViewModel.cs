@@ -93,6 +93,62 @@ namespace DuplicatePhotoFinder
             private set;
         }
 
+        private bool searchInitialization = false;
+        public bool SearchInitialization
+        {
+            get { return searchInitialization; }
+            set
+            {
+                if (searchInitialization != value)
+                {
+                    searchInitialization = value;
+                    OnPropertyChanged("SearchInitialization");
+                }
+            }
+        }
+
+        private bool isSearchingProgressBar = false;
+        public bool IsSearchingProgressBar
+        {
+            get { return isSearchingProgressBar; }
+            set
+            {
+                if (isSearchingProgressBar != value)
+                {
+                    isSearchingProgressBar = value;
+                    OnPropertyChanged("IsSearchingProgressBar");
+                }
+            }
+        }
+
+        private int totalFileCount = 0;
+        public int TotalFileCount
+        {
+            get { return totalFileCount; }
+            set
+            {
+                if(totalFileCount != value)
+                {
+                    totalFileCount = value;
+                    OnPropertyChanged("TotalFileCount");
+                }
+            }
+        }
+
+        private int currentFileIndex = 0;
+        public int CurrentFileIndex
+        {
+            get { return currentFileIndex; }
+            set
+            {
+                if (currentFileIndex != value)
+                {
+                    currentFileIndex = value;
+                    OnPropertyChanged("CurrentFileIndex");
+                }
+            }
+        }
+
         #endregion
 
         #region Validation
@@ -119,8 +175,14 @@ namespace DuplicatePhotoFinder
 
         private void startSearching()
         {
+            SearchInitialization = true;
+            TotalFileCount = Directory.GetFiles(PicturePath, "*.jpg", SearchOption.AllDirectories).Length;
+            SearchInitialization = false;
+            IsSearchingProgressBar = true;
+
             searchForDuplicatePictures(PicturePath);
             IsSearching = false;
+            IsSearchingProgressBar = false;
         }
 
         private void searchForDuplicatePictures(String path)
@@ -130,6 +192,7 @@ namespace DuplicatePhotoFinder
                 DirectoryInfo currentDirectory = new DirectoryInfo(path);
                 foreach (FileInfo currentFile in currentDirectory.GetFiles("*.jpg"))
                 {
+                    CurrentFileIndex++;
                     DateTime dateTaken = getDateTaken(currentFile.FullName);
                     PhotoViewModel photoViewModel = new PhotoViewModel();
                     photoViewModel.DateTaken = dateTaken;
@@ -149,6 +212,7 @@ namespace DuplicatePhotoFinder
                             DuplicatePhotoViewModel duplicatePhotoViewModel = new DuplicatePhotoViewModel();
                             duplicatePhotoViewModel.Id = hash;
                             duplicatePhotoViewModel.DuplicatePictures.Add(photoViewModel);
+                            duplicatePhotoViewModel.DuplicatePictures.Add(photos[hash][0]);
                             App.Current.Dispatcher.Invoke((Action)delegate
                             {
                                 DuplicatePictures.Add(duplicatePhotoViewModel);

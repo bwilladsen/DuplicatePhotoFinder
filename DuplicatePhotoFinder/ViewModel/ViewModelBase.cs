@@ -40,7 +40,10 @@ namespace DuplicatePhotoFinder
         {
             if (PropertyChanged != null)
             {
-                PropertyChanged(this, new PropertyChangedEventArgs(info));
+                App.Current.Dispatcher.Invoke((Action)delegate
+                {
+                    PropertyChanged(this, new PropertyChangedEventArgs(info));
+                });
             }
         }
 
