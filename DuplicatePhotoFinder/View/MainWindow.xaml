@@ -17,7 +17,8 @@
                 </ListBox.ItemsPanel>
                 <ListBox.ItemTemplate>
                     <DataTemplate>
-                        <Image Source="{Binding Path=Path}" Height="192" Width="192"/>
+                        <Image Source="{Binding Path=Path}" Height="192" Width="192"
+                               ToolTip="{Binding Path=Path}"/>
                     </DataTemplate>
                 </ListBox.ItemTemplate>
             </ListBox>
