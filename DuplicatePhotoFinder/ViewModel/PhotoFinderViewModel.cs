@@ -9,33 +9,26 @@ namespace DuplicatePhotoFinder
 {
     public class PhotoFinderViewModel : BaseViewModel
     {
+        #region Constructor
+
         public PhotoFinderViewModel()
         {
             DuplicatePictures = new ObservableCollection<DuplicatePhotoViewModel>();
         }
 
+        #endregion
+
         #region Variables
 
         private Thread searchThread = null;
-        Dictionary<String, List<PhotoViewModel>> photos = new Dictionary<String, List<PhotoViewModel>>();
+        private Dictionary<String, List<PhotoViewModel>> photos = new Dictionary<String, List<PhotoViewModel>>();
         private String picturePath = String.Empty;
+        private UICommand searchCommand;
+        private bool isSearching = false;
 
         #endregion
 
         #region Commands
-
-        private UICommand searchCommand;
-        public UICommand SearchCommand
-        {
-            get
-            {
-                if (searchCommand == null)
-                {
-                    searchCommand = new UICommand(searchCanExecuteCommandHandler, searchExecuteCommandHandler);
-                }
-                return searchCommand;
-            }
-        }
 
         private bool searchCanExecuteCommandHandler(object sender)
         {
@@ -54,7 +47,19 @@ namespace DuplicatePhotoFinder
         #endregion
 
         #region Properties
-        
+
+        public UICommand SearchCommand
+        {
+            get
+            {
+                if (searchCommand == null)
+                {
+                    searchCommand = new UICommand(searchCanExecuteCommandHandler, searchExecuteCommandHandler);
+                }
+                return searchCommand;
+            }
+        }
+
         public String PicturePath
         {
             get { return this.picturePath; }
@@ -63,15 +68,23 @@ namespace DuplicatePhotoFinder
                 if (value != picturePath)
                 {
                     picturePath = value;
-                    NotifyPropertyChanged("PicturePath");
+                    OnPropertyChanged("PicturePath");
                 }
             }
         }
 
         public bool IsSearching
         {
-            get;
-            private set;
+            get { return isSearching; }
+            private set
+            {
+                if (isSearching != value)
+                {
+                    isSearching = value;
+                    OnPropertyChanged("IsSearching");
+                }
+
+            }
         }
 
         public ObservableCollection<DuplicatePhotoViewModel> DuplicatePictures

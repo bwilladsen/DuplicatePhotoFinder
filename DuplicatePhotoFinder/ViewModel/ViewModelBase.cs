@@ -36,7 +36,7 @@ namespace DuplicatePhotoFinder
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        protected void NotifyPropertyChanged(String info)
+        protected void OnPropertyChanged(String info)
         {
             if (PropertyChanged != null)
             {
