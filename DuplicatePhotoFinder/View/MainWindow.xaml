@@ -8,6 +8,7 @@
         Title="MainWindow" Height="350" Width="525">
     <Window.Resources>
         <local:BoolToVisibilityConverter x:Key="boolToVisibilityConverter" />
+        <local:OppositeBooleanConverter x:Key="oppositeBooleanConverter" />
         <DataTemplate DataType="{x:Type local:DuplicatePhotoViewModel}">
             <ListBox ScrollViewer.HorizontalScrollBarVisibility="Disabled" ItemsSource="{Binding Path=DuplicatePictures}">
                 <ListBox.ItemsPanel>
@@ -34,7 +35,7 @@
             <ColumnDefinition />
             <ColumnDefinition Width="Auto" />
         </Grid.ColumnDefinitions>
-        <Grid Grid.Row="0" Grid.ColumnSpan="2" Margin="5">
+        <Grid Grid.Row="0" Grid.ColumnSpan="2" Margin="5" IsEnabled="{Binding Path=IsSearching, Converter={StaticResource oppositeBooleanConverter}}">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="*"/>
