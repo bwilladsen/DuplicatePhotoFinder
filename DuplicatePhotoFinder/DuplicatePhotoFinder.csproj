@@ -82,6 +82,7 @@
     </Compile>
     <Compile Include="Utilities\ExtensionMethods.cs" />
     <Compile Include="Utilities\UICommand.cs" />
+    <Compile Include="ViewModel\DuplicatePhotoViewModel.cs" />
     <Compile Include="ViewModel\PhotoViewModel.cs" />
     <Compile Include="ViewModel\ViewModelBase.cs" />
     <Compile Include="ViewModel\PhotoFinderViewModel.cs" />

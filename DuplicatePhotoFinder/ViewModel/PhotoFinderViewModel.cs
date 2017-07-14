@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Threading;
 using System.Windows.Media.Imaging;
@@ -8,11 +9,16 @@ namespace DuplicatePhotoFinder
 {
     public class PhotoFinderViewModel : BaseViewModel
     {
+        public PhotoFinderViewModel()
+        {
+            DuplicatePictures = new ObservableCollection<DuplicatePhotoViewModel>();
+        }
+
         #region Variables
 
         private Thread searchThread = null;
         Dictionary<String, List<PhotoViewModel>> photos = new Dictionary<String, List<PhotoViewModel>>();
-        List<String> duplicatePhotos = new List<String>();
+        private String picturePath = String.Empty;
 
         #endregion
 
@@ -39,14 +45,16 @@ namespace DuplicatePhotoFinder
         private void searchExecuteCommandHandler(object sender)
         {
             IsSearching = true;
-            startSearching();
+            searchThread = new Thread(() => startSearching());
+            searchThread.IsBackground = true;
+            searchThread.Name = "Picture Search Thread";
+            searchThread.Start();
         }
 
         #endregion
 
         #region Properties
-
-        private String picturePath = String.Empty;
+        
         public String PicturePath
         {
             get { return this.picturePath; }
@@ -63,7 +71,13 @@ namespace DuplicatePhotoFinder
         public bool IsSearching
         {
             get;
-            set;
+            private set;
+        }
+
+        public ObservableCollection<DuplicatePhotoViewModel> DuplicatePictures
+        {
+            get;
+            private set;
         }
 
         #endregion
@@ -92,10 +106,8 @@ namespace DuplicatePhotoFinder
 
         private void startSearching()
         {
-            searchThread = new Thread(() => searchForDuplicatePictures(PicturePath));
-            searchThread.IsBackground = true;
-            searchThread.Name = "Picture Search Thread";
-            searchThread.Start();
+            searchForDuplicatePictures(PicturePath);
+            IsSearching = false;
         }
 
         private void searchForDuplicatePictures(String path)
@@ -118,9 +130,23 @@ namespace DuplicatePhotoFinder
                     }
                     else
                     {
-                        if(!duplicatePhotos.Contains(hash))
+                        int index = getDuplicatePhotoIndex(hash);
+                        if (index == -1)
                         {
-                            duplicatePhotos.Add(hash);
+                            DuplicatePhotoViewModel duplicatePhotoViewModel = new DuplicatePhotoViewModel();
+                            duplicatePhotoViewModel.Id = hash;
+                            duplicatePhotoViewModel.DuplicatePictures.Add(photoViewModel);
+                            App.Current.Dispatcher.Invoke((Action)delegate
+                            {
+                                DuplicatePictures.Add(duplicatePhotoViewModel);
+                            });
+                        }
+                        else
+                        {
+                            App.Current.Dispatcher.Invoke((Action)delegate
+                            {
+                                DuplicatePictures[index].DuplicatePictures.Add(photoViewModel);
+                            });
                         }
                     }
                     photos[hash].Add(photoViewModel);
@@ -136,6 +162,19 @@ namespace DuplicatePhotoFinder
                 // TODO:  Logging
             }
 
+        }
+
+        private int getDuplicatePhotoIndex(string id)
+        {
+            for (int i = 0; i < DuplicatePictures.Count; i++)
+            {
+                if (DuplicatePictures[i].Id == id)
+                {
+                    return i;
+                }
+            }
+
+            return -1;
         }
 
         private DateTime getDateTaken(string inFullPath)
